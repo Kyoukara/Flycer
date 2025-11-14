@@ -1,0 +1,51 @@
+local url =
+    "https://raw.githubusercontent.com/Kyoukara/Flycer/refs/heads/main/9f984e79-776c-4c8d-ba86-f305acdd26dd/15d37af4"
+
+local function notify(title, text)
+    pcall(
+        function()
+            game:GetService("StarterGui"):SetCore(
+                "SendNotification",
+                {
+                    Title = title,
+                    Text = text,
+                    Duration = 4
+                }
+            )
+        end
+    )
+end
+
+local function smartGet(u)
+    if typeof(game.HttpGetAsync) == "function" then
+        local ok, result =
+            pcall(
+            function()
+                return game:HttpGetAsync(u)
+            end
+        )
+        if ok and result then
+            notify("LOADER", "Loaded via FastFecth")
+            return result
+        end
+    end
+
+    local ok, result =
+        pcall(
+        function()
+            return game:HttpGet(u)
+        end
+    )
+    if ok and result then
+        notify("LOADER", "Loaded via SafeFetch")
+        return result
+    end
+
+    notify("Loader", "SCRIPT GAGAL!")
+    return nil
+end
+
+local src = smartGet(url)
+if src then
+    loadstring(src)()
+end
